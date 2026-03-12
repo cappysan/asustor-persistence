@@ -1,0 +1,24 @@
+# Cappysan's Asustor Persistence APK
+
+## Table of contents
+1. [Support & Sponsorship](#support)  
+2. [License](#license)  
+
+## Support & Sponsorship <a name="support"></a>
+
+You can help support this project, and all Cappysan projects, through the following actions:
+
+- ⭐Star the repository on GitLab, GitHub, or both to increase visibility and community engagement.
+
+- 💬 Join the Discord community: [https://discord.gg/SsY3CAdp4Q](https://discord.gg/SsY3CAdp4Q) to connect, contribute, share feedback, and/or stay updated.
+
+- 🛠️ Contribute by submitting issues, improving documentation, or creating pull requests to help the project grow.
+
+- ☕ Support financially through [Buy Me a Coffee](https://buymeacoffee.com/cappysan), [Patreon](https://www.patreon.com/c/cappysan), [GitHub](https://github.com/sponsors/cappysan), or [Bitcoin (bc1qaz86l247df34h2q657c6zfs5l33r76s4ewxg4v)](https://addrs.to/pay/BTC/bc1qaz86l247df34h2q657c6zfs5l33r76s4ewxg4v). Your contributions directly sustain ongoing development and maintenance, including server costs.
+
+Your support ensures these projects continue to improve, expand, and remain freely available to everyone.
+
+
+## License <a name="license"></a>
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

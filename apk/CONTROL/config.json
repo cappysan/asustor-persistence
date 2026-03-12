@@ -1,0 +1,30 @@
+{
+  "general": {
+    "architecture": "any",
+    "conflicts": [],
+    "depends": [
+      "python3(>=3.10.0)",
+      "jq"
+    ],
+    "email": "julien@cappysan.dev",
+    "firmware": "5.0.0",
+    "maintainer": "Cappysan",
+    "name": "Persistence",
+    "package": "cappysan-persistence",
+    "version": "0.1.0-r0",
+    "developer": "Cappysan",
+    "website": "https://gitlab.com/cappysan/asustor/persistence"
+  },
+  "register": {
+    "share-folder": [
+      {
+        "name": "Configuration",
+        "description": "Application configuration"
+      }
+    ],
+    "boot-priority": {
+      "start-order": 25,
+      "stop-order": 75
+    }
+  }
+}
