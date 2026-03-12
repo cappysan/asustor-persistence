@@ -3,3 +3,23 @@
 #
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
+
+# Copy the files in conf.dist/ to /etc.
+# Note that folders /usr/local/etc/, /usr/builtin/etc.default/, /usr/builtin/etc/ also exist
+
+# Copy docker configuration
+# cf: https://docs.docker.com/engine/logging/drivers/json-file/
+#     https://docs.docker.com/engine/logging/drivers/local/
+mkdir -p /etc/docker
+cp -f ${APKG_CFG_DIR}/docker/daemon.json /etc/docker/
+if test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
+  # The following file exists only when docker is up and running
+  if test -f /usr/local/lib/docker/cli-plugins/docker-compose; then
+    /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh reload
+  fi
+fi
+
+# for as_dir in /usr/local/AppCentral/cappysan-*/sites-available.dist; do
+#   rsync -a --inplace --ignore-existing ${as_dir}/ \
+#     ${APKG_CFG_DIR}/sites-available/
+# done
