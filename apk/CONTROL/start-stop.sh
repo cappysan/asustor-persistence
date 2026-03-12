@@ -22,7 +22,7 @@ case $1 in
 
   stop)
     rm -f "${APKG_CFG_DIR}/active"
-    logger "[Persistence] Uninstallation: Not implemented."
+    logger "[Persistence] Stop: Not implemented."
     ;;
 
   restart)
