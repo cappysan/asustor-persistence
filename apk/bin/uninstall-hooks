@@ -13,7 +13,7 @@ function logger() {
 # Docker
 # ======
 if test -f /etc/docker/daemon.json.orig; then
-  diff -Nq /etc/docker/daemon.json.orig /etc/docker/daemon.json 2>&1 >/dev/null
+  diff -Nq /etc/docker/daemon.json.orig /etc/docker/daemon.json >/dev/null 2>&1
   as_diff=$?
   mv -f /etc/docker/daemon.json.orig /etc/docker/daemon.json
   chown root:root /etc/docker/daemon.json
