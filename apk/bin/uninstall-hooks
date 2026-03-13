@@ -9,23 +9,15 @@ function logger() {
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
 
+
 # Docker
 # ======
-# cf: https://docs.docker.com/engine/logging/drivers/json-file/
-#     https://docs.docker.com/engine/logging/drivers/local/
-mkdir -p /etc/docker
-if test ! -f /etc/docker/daemon.json; then
-  touch /etc/docker/daemon.json
-fi
-if test ! -f /etc/docker/daemon.json.orig; then
-  cp -f /etc/docker/daemon.json /etc/docker/daemon.json.orig
-fi
+if test -f /etc/docker/daemon.json.orig; then
+  diff -Nq /etc/docker/daemon.json.orig /etc/docker/daemon.json 2>&1 >/dev/null
+  as_diff=$?
+  mv -f /etc/docker/daemon.json.orig /etc/docker/daemon.json
+  chown root:root /etc/docker/daemon.json
 
-diff -Nq /etc/docker/daemon.json ${APKG_CFG_DIR}/docker/daemon.json 2>&1 >/dev/null
-as_diff=$?
-cp -f ${APKG_CFG_DIR}/docker/daemon.json /etc/docker/
-
-if test "x${as_diff}" != "x0"; then
   if test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
     # The following file exists only when docker is up and running
     if test -f /usr/local/lib/docker/cli-plugins/docker-compose; then
@@ -38,16 +30,11 @@ fi
 
 # Hosts
 # =====
-logger "[Persistence] Configuring /etc/hosts..."
-if test ! -f /etc/hosts.orig; then
-  cp -f /etc/hosts /etc/hosts.orig
+logger "[Persistence] Restoring /etc/hosts..."
+if test -f /etc/hosts.orig; then
+  mv -f /etc/hosts.orig /etc/hosts
+  chown root:root /etc/hosts
 fi
-cat /etc/hosts.orig > /etc/hosts
-for as_file in /share/Configuration/*/hosts.d/hosts; do
-  if test -f ${as_file}; then
-    cat ${as_file} >> /etc/hosts
-  fi
-done
 
 # TODO: Map Configuration folder to AppCentral folder.
 # Should we set the commands in reload file? Or should reload only contain the names of the services to reload?
