@@ -26,7 +26,9 @@ diff -Nq /etc/docker/daemon.json ${APKG_CFG_DIR}/docker/daemon.json >/dev/null 2
 as_diff=$?
 cp -f ${APKG_CFG_DIR}/docker/daemon.json /etc/docker/
 
-if test "x${as_diff}" != "x0"; then
+if test "x${DOCKER_NO_RELOAD:-}" == "x"; then
+  true
+elif test "x${as_diff}" != "x0"; then
   if test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
     # The following file exists only when docker is up and running
     if test -f /usr/local/lib/docker/cli-plugins/docker-compose; then
