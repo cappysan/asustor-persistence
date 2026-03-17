@@ -10,19 +10,19 @@ function logger() {
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
 
-# cf: apk/CONTROL/install-hooks
+# cf: apk/CONTROL/install-hooks.sh
 export HOME=/share/Configuration/persistence
 case $1 in
   start)
     logger "[Persistence] Starting, creating user configuration..."
     touch "${APKG_CFG_DIR}/active"
-    ${APKG_PKG_DIR}/CONTROL/install-hooks
+    ${APKG_PKG_DIR}/CONTROL/install-hooks.sh
     ;;
 
   stop)
     logger "[Persistence] Stopping, removing user configuration..."
     rm -f "${APKG_CFG_DIR}/active"
-    ${APKG_PKG_DIR}/CONTROL/uninstall-hooks
+    ${APKG_PKG_DIR}/CONTROL/uninstall-hooks.sh
     ;;
 
   restart)
