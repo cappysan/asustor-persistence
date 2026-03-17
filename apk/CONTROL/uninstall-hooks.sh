@@ -12,7 +12,9 @@ function logger() {
 
 # Docker
 # ======
-if test -f /etc/docker/daemon.json.orig; then
+if test "x${DOCKER_NO_RELOAD:-}" != "x"; then
+  logger "[Persistence] DOCKER_NO_RELOAD is set, not reloading docker-ce"
+elif test -f /etc/docker/daemon.json.orig; then
   mv -f /etc/docker/daemon.json.orig /etc/docker/daemon.json
   chown root:root /etc/docker/daemon.json
   # Do not always reload since it's slow, and if we compare last
@@ -29,6 +31,15 @@ if test -f /etc/docker/daemon.json.orig; then
       fi
     fi
   fi
+fi
+
+
+# Resolv.conf
+# =====
+logger "[Persistence] Restoring /etc/resolv.conf..."
+if test -f /etc/resolv.conf.orig; then
+  mv -f /etc/resolv.conf.orig /etc/resolv.conf
+  chown root:root /etc/resolv.conf
 fi
 
 
