@@ -21,6 +21,7 @@ if test ! -f /etc/docker/daemon.json.orig; then
   cp -f /etc/docker/daemon.json /etc/docker/daemon.json.orig
 fi
 
+# Reload only if the daemon.json changed
 diff -Nq /etc/docker/daemon.json ${APKG_CFG_DIR}/docker/daemon.json >/dev/null 2>&1
 as_diff=$?
 cp -f ${APKG_CFG_DIR}/docker/daemon.json /etc/docker/
@@ -43,17 +44,10 @@ if test ! -f /etc/hosts.orig; then
   cp -f /etc/hosts /etc/hosts.orig
 fi
 cat /etc/hosts.orig > /etc/hosts
-for as_file in /share/Configuration/*/hosts.d/hosts; do
+for as_file in /share/Configuration/*/hosts.d/*; do
   if test -f ${as_file}; then
-    cat ${as_file} >> /etc/hosts
-  fi
-done
-
-# TODO: Map Configuration folder to AppCentral folder.
-# Should we set the commands in reload file? Or should reload only contain the names of the services to reload?
-for as_file in /share/Configuration/*/hosts.d/reload; do
-  if test -f ${as_file}; then
-    as_dir="$(dirname ${as_file})"
-    # If a reload file exists, reload the service
+    echo ""             >> /etc/hosts
+    echo "# ${as_file}" >> /etc/hosts
+    cat ${as_file}      >> /etc/hosts
   fi
 done

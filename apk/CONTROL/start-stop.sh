@@ -10,19 +10,19 @@ function logger() {
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
 
-# cf: apk/bin/install-hooks
-export HOME=/share/Configuration/apache
+# cf: apk/CONTROL/install-hooks
+export HOME=/share/Configuration/persistence
 case $1 in
   start)
-    touch "${APKG_CFG_DIR}/active"
     logger "[Persistence] Starting, creating user configuration..."
-    ${APKG_PKG_DIR}/bin/install-hooks
+    touch "${APKG_CFG_DIR}/active"
+    ${APKG_PKG_DIR}/CONTROL/install-hooks
     ;;
 
   stop)
-    rm -f "${APKG_CFG_DIR}/active"
     logger "[Persistence] Stopping, removing user configuration..."
-    ${APKG_PKG_DIR}/bin/uninstall-hooks
+    rm -f "${APKG_CFG_DIR}/active"
+    ${APKG_PKG_DIR}/CONTROL/uninstall-hooks
     ;;
 
   restart)
@@ -31,6 +31,7 @@ case $1 in
     ;;
 
   reload)
+    logger "[Persistence] Reloading..."
     if test -f "${APKG_CFG_DIR}/active"; then
       ./CONTROL/start-stop.sh stop
       ./CONTROL/start-stop.sh start
