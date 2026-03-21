@@ -10,7 +10,6 @@ function logger() {
   syslog --log 0 --level 0 --user SYSTEM --event "${@}"
 }
 
-# cf: apk/CONTROL/install-hooks.sh
 export HOME=/share/Configuration/persistence
 case $1 in
   start)
@@ -26,14 +25,13 @@ case $1 in
     ;;
 
   restart)
-    ./CONTROL/start-stop.sh stop
     ./CONTROL/start-stop.sh start
     ;;
 
   reload)
     logger "[Persistence] Reloading..."
     if test -f "${APKG_CFG_DIR}/active"; then
-      ./CONTROL/start-stop.sh stop
+      export DOCKER_NO_RELOAD=1
       ./CONTROL/start-stop.sh start
     fi
     ;;
