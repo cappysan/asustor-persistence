@@ -13,22 +13,24 @@ function logger() {
 # ======
 # cf: https://docs.docker.com/engine/logging/drivers/json-file/
 #     https://docs.docker.com/engine/logging/drivers/local/
-mkdir -p /etc/docker
-if test ! -f /etc/docker/daemon.json; then
-  touch /etc/docker/daemon.json
+#
+if test ! -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json; then
+  exit 0
 fi
+
+mkdir -p /etc/docker
+# Create an empty file so that we don't backup the persist.d version
+touch /etc/docker/daemon.json
 if test ! -f /etc/docker/daemon.json.orig; then
   cp -f /etc/docker/daemon.json /etc/docker/daemon.json.orig
 fi
+if diff -abq ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/daemon.json >/dev/null; then
+  # Files are the same.
+  chown root:root /etc/docker/daemon.json
+else
+  cp -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/daemon.json
+  chown root:root /etc/docker/daemon.json
 
-# Reload only if the daemon.json changed
-diff -Nq /etc/docker/daemon.json ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json >/dev/null 2>&1
-as_diff=$?
-cp -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/
-
-if test "x${DOCKER_NO_RELOAD:-}" != "x"; then
-  logger "[Persistence] DOCKER_NO_RELOAD is set, not reloading docker-ce"
-elif test "x${as_diff}" != "x0"; then
   if test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
     # The following file exists only when docker is up and running
     if test -f /usr/local/lib/docker/cli-plugins/docker-compose; then

@@ -13,26 +13,29 @@ function logger() {
 export HOME=/share/Configuration/persistence
 case $1 in
   start)
-    logger "[Persistence] Starting, creating user configuration..."
+    logger "[Persistence] Activating user configuration..."
     touch "${APKG_CFG_DIR}/active"
-    ${APKG_PKG_DIR}/CONTROL/install-hooks.sh
+    ./CONTROL/start.sh
     ;;
 
   stop)
-    logger "[Persistence] Stopping, removing user configuration..."
+    logger "[Persistence] Removing user configuration..."
     rm -f "${APKG_CFG_DIR}/active"
-    ${APKG_PKG_DIR}/CONTROL/uninstall-hooks.sh
+    ./CONTROL/stop.sh
     ;;
 
   restart)
+    # Do not switch files off/on in sequence, just do it once.
     ./CONTROL/start-stop.sh start
     ;;
 
   reload)
-    logger "[Persistence] Reloading..."
+    # Do not switch files off/on in sequence, just do it once.
     if test -f "${APKG_CFG_DIR}/active"; then
       export DOCKER_NO_RELOAD=1
-      ./CONTROL/start-stop.sh start
+      ./CONTROL/start.sh
+    else
+      logger "[Persistence] Service is not up, cannot reload."
     fi
     ;;
 

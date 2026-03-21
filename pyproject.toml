@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 [project]
 name = "cappysan-persistence"
-version = "0.1.0-r12"
+version = "2026.03.21-r0"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -24,7 +24,7 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 # Other tools
 # ------------------------------------------------------------------------------
 [tool.bumpversion]
-current_version = "0.1.0-r12"
+current_version = "2026.03.21-r0"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.
@@ -66,8 +66,8 @@ first_value = "1"
 filename = "apk/CONTROL/config.json"
 
 # .answers.yml contains the current version in "version"/"scaffold.version"
-[[tool.bumpversion.files]]
-filename = ".answers.yml"
+# [[tool.bumpversion.files]]
+# filename = ".answers.yml"
 
 # pyproject.toml contains the current version in "tool.bumpversion.current_version"
 [[tool.bumpversion.files]]

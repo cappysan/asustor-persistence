@@ -2,37 +2,9 @@
 
 Changes relevant to the users of Cappysan's Asustor persistence APK are documented here.
 
-This project adheres to [Semantic Versioning](https://semver.org/).
+This project adheres to [CalVer Versioning](https://calver.org/).
 
-## 0.1.0-r12 - 2026-03-17
-
-### Added
-
-- Added "DOCKER_NO_RELOAD" variable to prevent restarting docker-ce
-- Added resolv.conf handler
-
-### Changed
-
-- Remove partial support for reload files
-- Never automatically reload docker on uninstall
-
-
-## 0.1.0-r6 - 2026-03-13
-
-### Added
-
-- Added logger functions and calls
-- Handle /etc/hosts files
-
-
-## 0.1.0-r2 - 2026-03-12
-
-### Added
-
-- Handle docker/daemon.json
-
-
-## 0.1.0-r1 - 2026-03-12
+## 2026.03.21
 
 ### Added
 

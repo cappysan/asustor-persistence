@@ -10,6 +10,7 @@ export APKG_CFG_DIR APKG_PKG_VER APKG_PKG_SHORT_VER
 env | grep APKG | grep -v APKG_PKG_STATUS \
   | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
 
-${APKG_PKG_DIR}/CONTROL/common.sh
+cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
+./CONTROL/prepare.sh
 
 exit 0
