@@ -3,11 +3,7 @@
 #
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
+. ${APKG_PKG_DIR}/env
 
 # Docker
 # ======
@@ -35,11 +31,15 @@ else
   cp -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/daemon.json
   chown root:root /etc/docker/daemon.json
 
-  if test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
+  if test -n "${DOCKER_NO_RELOAD}"; then
+    logger "[Persistence] Not reloading docker-ce, DOCKER_NO_RELOAD is set."
+  elif test -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
     # The following file exists only when docker is up and running
     if test -f /usr/local/lib/docker/cli-plugins/docker-compose; then
       logger "[Persistence] Reloading docker-ce..."
       /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh reload
+    else
+      logger "[Persistence] Not reloading docker-ce, docker-ce not running."
     fi
   fi
 fi

@@ -3,11 +3,7 @@
 #
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
+. ${APKG_PKG_DIR}/env
 
 
 # Docker

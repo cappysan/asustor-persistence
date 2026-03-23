@@ -3,11 +3,8 @@
 #
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
+. ${APKG_PKG_DIR}/env
 
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
 
 logger "[Persistence] Restoring /etc/hosts..."
 if test -f /etc/hosts.orig; then

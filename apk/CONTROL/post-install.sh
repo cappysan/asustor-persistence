@@ -11,16 +11,7 @@ env | grep APKG | grep -v APKG_PKG_STATUS \
   | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
 
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-
-function logger() {
-  echo "${@}" >&2
-  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
-}
-
-# User
-# ====
-export APKG_USER=admin
-export APKG_GROUP=root
+. ${APKG_PKG_DIR}/env
 
 # Permissions
 # ===========
