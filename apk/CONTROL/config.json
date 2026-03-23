@@ -2,10 +2,7 @@
   "general": {
     "architecture": "any",
     "conflicts": [],
-    "depends": [
-      "python3(>=3.10.0)",
-      "jq"
-    ],
+    "depends": [],
     "email": "julien@cappysan.dev",
     "firmware": "5.0.0",
     "maintainer": "Cappysan",
