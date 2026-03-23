@@ -8,7 +8,7 @@
     "maintainer": "Cappysan",
     "name": "Persistence",
     "package": "cappysan-persistence",
-    "version": "2026.03.21-r13",
+    "version": "2026.03.23-r15",
     "developer": "Cappysan",
     "website": "https://gitlab.com/cappysan/asustor/persistence"
   },
@@ -20,9 +20,9 @@
       }
     ],
     "boot-priority": {
-      "comment": "docker-ce start order is 65, thus before most services with 70.",
+      "x-comment": "docker-ce start order is 65, thus before most services which have 70.",
       "start-order": 60,
-      "stop-order": 40
+      "stop-order": 60
     }
   }
 }

@@ -11,6 +11,37 @@ env | grep APKG | grep -v APKG_PKG_STATUS \
   | grep -v " " | sort > ${APKG_PKG_DIR}/.env.install
 
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
-./CONTROL/prepare.sh
 
+function logger() {
+  echo "${@}" >&2
+  syslog --log 0 --level 0 --user SYSTEM --event "${@}"
+}
+
+# User
+# ====
+export APKG_USER=admin
+export APKG_GROUP=root
+
+# Permissions
+# ===========
+# Ensure permissions are limited to root user for the application folder.
+chown -R root:root ${APKG_PKG_DIR}
+
+
+# Configuration folder
+# ====================
+# Don't overwrite user permissions if set manually
+if test ! -d ${APKG_CFG_DIR}; then
+  mkdir -p ${APKG_CFG_DIR}
+  chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
+  chmod 750 ${APKG_CFG_DIR}
+fi
+
+# Configuration
+# =============
+# Don't override files that could have been user modified.
+rsync -a --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
+chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
+
+logger "[Persistence] Application installed."
 exit 0

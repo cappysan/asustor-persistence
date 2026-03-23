@@ -18,15 +18,19 @@ if test ! -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json; then
   exit 0
 fi
 
-mkdir -p /etc/docker
 # Create an empty file so that we don't backup the persist.d version
+mkdir -p /etc/docker
 touch /etc/docker/daemon.json
+chown root:root /etc/docker/daemon.json
 if test ! -f /etc/docker/daemon.json.orig; then
   cp -f /etc/docker/daemon.json /etc/docker/daemon.json.orig
 fi
+
+# Compare file about to be installed and current configuration,
+# If it's the same, skip it
 if diff -abq ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/daemon.json >/dev/null; then
   # Files are the same.
-  chown root:root /etc/docker/daemon.json
+  logger "[Persistence] Not reloading docker-ce, no configuration change."
 else
   cp -f ${APKG_CFG_DIR}/persist.d/etc/docker/daemon.json /etc/docker/daemon.json
   chown root:root /etc/docker/daemon.json

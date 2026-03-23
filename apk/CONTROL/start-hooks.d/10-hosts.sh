@@ -10,9 +10,12 @@ function logger() {
 }
 
 logger "[Persistence] Configuring /etc/hosts..."
+# Make a backup that will serve as header
 if test ! -f /etc/hosts.orig; then
   cp -f /etc/hosts /etc/hosts.orig
 fi
+
+# Concat all files together
 cat /etc/hosts.orig > /etc/hosts
 for as_file in /share/Configuration/*/persist.d/etc/hosts; do
   if test -f ${as_file}; then

@@ -25,16 +25,17 @@ case $1 in
 
   restart)
     # Do not switch files off/on in sequence, just do it once.
+    # Otherwise it'll restart docker every time
     ./CONTROL/start-stop.sh start
     ;;
 
   reload)
     # Do not switch files off/on in sequence, just do it once.
+    # Otherwise it'll restart docker every time
     if test -f "${APKG_CFG_DIR}/active"; then
-      export DOCKER_NO_RELOAD=1
       ./CONTROL/start.sh
     else
-      logger "[Persistence] Service is not up, cannot reload."
+      logger "[Persistence] Service is stopped, cannot reload."
     fi
     ;;
 
@@ -42,6 +43,6 @@ case $1 in
     echo "usage: $0 {start|stop|restart|reload}"
     exit 1
     ;;
-
 esac
+
 exit 0

@@ -17,4 +17,5 @@ if test -f ${APKG_CFG_DIR}/persist.d/etc/resolv.conf; then
     cp -f /etc/resolv.conf /etc/resolv.conf.orig
   fi
   cp ${APKG_CFG_DIR}/persist.d/etc/resolv.conf /etc/resolv.conf
+  chown root:root /etc/resolv.conf
 fi

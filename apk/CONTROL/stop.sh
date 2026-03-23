@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: MIT
 #
 # ------------------------------------------------------------------------------
-# Save variables
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 
-for as_file in ./CONTROL/uninstall-hooks.d/*.sh; do
+for as_file in ./CONTROL/stop-hooks.d/*.sh; do
   if test -f "${as_file}"; then
     ${as_file}
   fi
