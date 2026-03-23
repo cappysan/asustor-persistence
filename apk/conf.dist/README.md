@@ -2,12 +2,12 @@
 
 ## etc/docker/daemon.json
 
-The file `daemon.json` in this directory will replace `/etc/docker/daemon.json` every time the cappysan-persistence app is started.
+The file `daemon.json` in the directory will replace `/etc/docker/daemon.json` every time cappysan-persistence is started.
 
 
 ## etc/hosts
 
-Every host file as `/share/Configuration/*/persist.d/etc/hosts` will be added to `/etc/hosts`
+Every file as `/share/Configuration/cappysan-*/deps.d/persistence/hosts` will be added to `/etc/hosts`
 
 
 ## etc/resolv.conf

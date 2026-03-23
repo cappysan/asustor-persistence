@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 [project]
 name = "cappysan-persistence"
-version = "2026.03.21-r13"
+version = "2026.3.0-r13"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -24,13 +24,12 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 # Other tools
 # ------------------------------------------------------------------------------
 [tool.bumpversion]
-current_version = "2026.03.21-r13"
+current_version = "2026.3.0-r13"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.
   (?P<minor>[0-9]\\d*)\\.
-  (?P<patch>[0-9]\\d*)
-  -r(?P<rev>0|[1-9]\\d*)
+  0-r(?P<rev>0|[1-9]\\d*)
 """
 
 search = "{current_version}"
@@ -56,14 +55,11 @@ post_commit_hooks = []
 
 
 serialize = [
-  "{major}.{minor}.{patch}-r{rev}",
+  "{major}.{minor}.0-r{rev}",
 ]
 
 [tool.bumpversion.parts.minor]
-calver_format = "MM"
-
-[tool.bumpversion.parts.rev]
-first_value = "1"
+calver_format = "{0M}"
 
 [[tool.bumpversion.files]]
 filename = "apk/CONTROL/config.json"

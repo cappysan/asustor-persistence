@@ -14,7 +14,7 @@ fi
 
 # Concat all files together
 cat /etc/hosts.orig > /etc/hosts
-for as_file in /share/Configuration/*/persist.d/etc/hosts; do
+for as_file in /share/Configuration/*/deps.d/persistence/hosts; do
   if test -f ${as_file}; then
     echo ""                 >> /etc/hosts
     echo "# cf: ${as_file}" >> /etc/hosts
