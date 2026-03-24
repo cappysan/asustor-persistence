@@ -9,5 +9,6 @@ function logger() {
 # ====
 export APKG_USER=admin
 export APKG_GROUP=root
+export HOME=/share/Configuration/persistence
 
 # vim: ft=sh

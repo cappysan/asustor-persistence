@@ -32,7 +32,7 @@ fi
 # =============
 # Don't override files that could have been user modified.
 rsync -a --inplace --ignore-existing ${APKG_PKG_DIR}/conf.dist/ ${APKG_CFG_DIR}
-chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}
+chown -R ${APKG_USER}:${APKG_GROUP} ${APKG_CFG_DIR}/*
 
 logger "[Persistence] Application installed."
 exit 0

@@ -26,6 +26,7 @@ fi
 # Compare file about to be installed and current configuration,
 # If it's the same, skip it
 if test ! -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
+  logger "[Persistence] Not reloading docker-ce, docker-ce not installed."
   exit 0
 fi
 
