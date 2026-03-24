@@ -8,8 +8,8 @@ cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 
 # Resolv.conf
 # ===========
-logger "[Persistence] Configuring /etc/resolv.conf..."
 if test -f ${APKG_CFG_DIR}/etc/resolv.conf; then
+  logger "[${WHAT}] Configuring /etc/resolv.conf..."
   if test ! -f /etc/resolv.conf.orig; then
     cp -f /etc/resolv.conf /etc/resolv.conf.orig
   fi

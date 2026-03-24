@@ -6,7 +6,7 @@ cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
 
 
-logger "[Persistence] Configuring /etc/hosts..."
+logger "[${WHAT}] Configuring /etc/hosts..."
 # Make a backup that will serve as header
 if test ! -f /etc/hosts.orig; then
   cp -f /etc/hosts /etc/hosts.orig
