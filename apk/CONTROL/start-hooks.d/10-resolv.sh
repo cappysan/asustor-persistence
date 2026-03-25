@@ -13,6 +13,6 @@ if test -f ${APKG_CFG_DIR}/etc/resolv.conf; then
   if test ! -f /etc/resolv.conf.orig; then
     cp -f /etc/resolv.conf /etc/resolv.conf.orig
   fi
-  cp ${APKG_CFG_DIR}/etc/resolv.conf /etc/resolv.conf
+  cp -f ${APKG_CFG_DIR}/etc/resolv.conf /etc/resolv.conf
   chown root:root /etc/resolv.conf
 fi
