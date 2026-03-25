@@ -4,6 +4,14 @@ Changes relevant to the users of Cappysan's Asustor persistence APK are document
 
 This project adheres to [CalVer Versioning](https://calver.org/).
 
+
+## 2026.3.0-r34 - 2026-03-25
+
+### Changed
+
+- Internal CI change
+
+
 ## 2026.3.0-r33 - 2026-03-25
 
 ### Changed
@@ -17,6 +25,7 @@ This project adheres to [CalVer Versioning](https://calver.org/).
 
 - Do not restart docker if configuration is invalid.
 - Improve start/stop actions
+
 
 ## 2026.3.0-r28 - 2026-03-25
 
