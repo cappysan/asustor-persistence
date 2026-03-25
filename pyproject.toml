@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 [project]
 name = "cappysan-persistence"
-version = "2026.3.0-r33"
+version = "2026.3.0-r34"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -24,7 +24,7 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 # Other tools
 # ------------------------------------------------------------------------------
 [tool.bumpversion]
-current_version = "2026.3.0-r33"
+current_version = "2026.3.0-r34"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.
