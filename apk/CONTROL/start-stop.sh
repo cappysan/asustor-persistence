@@ -14,7 +14,7 @@ case $1 in
 
   stop)
     # Don't remove to re-install the files, with double docker restart
-    if test "x${APKG_PKG_STATUS}" == "xupgrade"; then
+    if test "x${APKG_PKG_STATUS}" == "xupgrade" -o "x${APKG_PKG_STATUS}" == "xswitch"; then
       logger "[${WHAT}] Not removing user configuration since it's an upgrade..."
       exit 0
     fi
