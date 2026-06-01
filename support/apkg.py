@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2021-2023 Asustor Systems, Inc. All Rights Reserved.
+# Revision 1, Julien Lecomte
 
 import argparse
 import csv
@@ -215,7 +216,7 @@ class Apkg:
         py_files = glob.glob(control_dir + "/*.py")
 
         for one_file in all_files:
-            # os.chmod(one_file, 0o644)
+            os.chmod(one_file, 0o644)
             os.chown(one_file, 0, 0)
 
         for one_file in sh_files:

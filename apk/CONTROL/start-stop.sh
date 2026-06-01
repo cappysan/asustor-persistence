@@ -1,13 +1,15 @@
 #!/usr/bin/env sh
 # SPDX-License-Identifier: MIT
 #
+# ------------------------------------------------------------------------------
 . /usr/local/AppCentral/cappysan-persistence/.env.install
 cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 . ${APKG_PKG_DIR}/env
+# ------------------------------------------------------------------------------
 
 case $1 in
   start)
-    logger "[${WHAT}] Activating user configuration..."
+    logger "[${WHAT}] Activating configuration persistence..."
     touch "${APKG_PKG_DIR}/active"
     ./CONTROL/start-hook.sh
     ;;
@@ -18,7 +20,7 @@ case $1 in
       logger "[${WHAT}] Not removing user configuration since it's an upgrade..."
       exit 0
     fi
-    logger "[${WHAT}] Removing user configuration..."
+    logger "[${WHAT}] Removing configuration persistence..."
     rm -f "${APKG_PKG_DIR}/active"
     ./CONTROL/stop-hook.sh
     ;;

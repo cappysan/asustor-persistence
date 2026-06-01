@@ -2,13 +2,16 @@
   "general": {
     "architecture": "any",
     "conflicts": [],
-    "depends": [],
+    "depends": [
+      "python3(>=3.10.11)",
+      "jq"
+    ],
     "email": "julien@cappysan.dev",
     "firmware": "5.0.0",
     "maintainer": "Cappysan",
     "name": "Persistence",
     "package": "cappysan-persistence",
-    "version": "2026.3.0-r34",
+    "version": "2026.6.0-r34",
     "developer": "Cappysan",
     "website": "https://gitlab.com/cappysan/asustor/persistence"
   },

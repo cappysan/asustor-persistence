@@ -1,0 +1,48 @@
+---
+answers:
+  - include: "~/.config/scaffold/answers.yml"
+    optional: True
+
+  - author: "Julien Lecomte"
+  - email: "julien@cappysan.dev"
+
+  - project_name: "cappysan-persistence"
+  - project_slug: "cappysan-persistence"
+  - project_url: "https://gitlab.com/cappysan/asustor/persistence"
+  - project_description: "Persistent configuration handling."
+
+  - has_documentation: False
+  - documentation_url: ""
+
+  - has_ci: True
+  - has_pages: False
+  - has_releases: True
+
+  - has_precommit: True
+  - has_precommit_codespell: True
+  - has_precommit_nitpick: True
+
+  - license: "MIT"
+  - version: "2026.6.0-r34"
+  - version_style: "calver-rev"
+  - copyright_string: "Cappysan, Julien Lecomte, and contributors"
+
+  - keep_placeholders: False
+
+  - template_url: "https://gitlab.com/cappysan/scaffolds/asustor-template"
+  - template_version: "1.1.0-r4"
+
+  - creation_year: "2026"
+  - last_update: "2026-06-01 17:22:42"
+  
+# ------------------------------------------------------------------------------
+# The following file enables recreating a templated output dir by executing:
+#   mk-scaffold clone "https://gitlab.com/cappysan/scaffolds/asustor-template" --input-file .answers.yml --output-dir output
+#
+  - maintainer: "Cappysan"
+  - developer: "Cappysan"
+
+  - app_name: "Persistence"
+  - cfg_name: "persistence"
+  - cappysan_name: "cappysan-persistence"
+  - asustor_name: "asustor-persistence"

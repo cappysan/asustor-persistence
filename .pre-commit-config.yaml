@@ -34,6 +34,7 @@ repos:
         name: "fix trailing whitespace"
         args: ["--markdown-linebreak-ext", "md"]
 
+
   - repo: "https://github.com/codespell-project/codespell"
     rev: v2.4.2
     hooks:
@@ -42,6 +43,8 @@ repos:
       exclude: "support/apkg.py"
       additional_dependencies:
         - tomli
+
+
 
   - repo: "https://github.com/andreoliwa/nitpick"
     rev: v0.38.1

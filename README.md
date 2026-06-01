@@ -1,4 +1,4 @@
-# Cappysan's Asustor Persistence APK
+# Cappysan's asustor-persistence APK
 
 This package enables the modification of several "/etc" files on startup. These files can not be configured from the Asustor UI.
 
@@ -26,7 +26,7 @@ More documentation can be found at [https://blog.cappysan.dev/asustor/](https://
 
 You can help support this project, and all Cappysan projects, through the following actions:
 
-- ⭐Star the repository on GitLab, GitHub, or both to increase visibility and community engagement.
+- ⭐ Star the repository on GitLab, GitHub, or both to increase visibility and community engagement.
 
 - 💬 Join the Discord community: [https://discord.gg/SsY3CAdp4Q](https://discord.gg/SsY3CAdp4Q) to connect, contribute, share feedback, and/or stay updated.
 

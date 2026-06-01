@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+#
 .PHONY: all apk
 
 all: apk
