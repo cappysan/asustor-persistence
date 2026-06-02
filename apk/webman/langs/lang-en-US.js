@@ -1,0 +1,34 @@
+/* _AS_STRINGS */
+_AS_STRINGS = {};
+
+/*PERSISTENCE*/
+_AS_STRINGS.PERSISTENCE = {};
+_AS_STRINGS.PERSISTENCE.APP_TITLE       = 'Persistence';
+_AS_STRINGS.PERSISTENCE.TAB_DNS         = 'DNS';
+_AS_STRINGS.PERSISTENCE.TAB_DOCKER      = 'Docker';
+_AS_STRINGS.PERSISTENCE.TAB_HOSTS       = 'Hosts';
+_AS_STRINGS.PERSISTENCE.STATUS_ACTIVE   = 'Active';
+_AS_STRINGS.PERSISTENCE.STATUS_INACTIVE = 'Inactive';
+_AS_STRINGS.PERSISTENCE.DESC_DNS        = 'Replaces /etc/resolv.conf on startup. Rename resolv.sample.conf to resolv.conf to activate.';
+_AS_STRINGS.PERSISTENCE.DESC_DOCKER     = 'Replaces /etc/docker/daemon.json on startup. Triggers a Docker reload if the configuration changed.';
+_AS_STRINGS.PERSISTENCE.DESC_HOSTS      = 'Appended to /etc/hosts on startup. Place files at /share/Configuration/*/deps.d/persistence/hosts.';
+_AS_STRINGS.PERSISTENCE.LABEL_SEARCH = 'Search';
+_AS_STRINGS.PERSISTENCE.COL_IP     = 'IP';
+_AS_STRINGS.PERSISTENCE.COL_HOST   = 'Hosts';
+_AS_STRINGS.PERSISTENCE.BTN_ADD    = 'Add';
+_AS_STRINGS.PERSISTENCE.BTN_REMOVE = 'Remove';
+_AS_STRINGS.PERSISTENCE.LABEL_CONTENT = 'Content';
+_AS_STRINGS.PERSISTENCE.LABEL_DOMAIN_DNS    = 'DomainDNS';
+_AS_STRINGS.PERSISTENCE.LABEL_PRIMARY_DNS   = 'PrimaryDNS';
+_AS_STRINGS.PERSISTENCE.LABEL_SECONDARY_DNS = 'SecondaryDNS';
+_AS_STRINGS.PERSISTENCE.BTN_MODIFY          = 'Modify';
+_AS_STRINGS.PERSISTENCE.BTN_DELETE          = 'Delete';
+_AS_STRINGS.PERSISTENCE.POPUP_TITLE_ADD     = 'Add Host';
+_AS_STRINGS.PERSISTENCE.POPUP_TITLE_MODIFY  = 'Modify Host';
+_AS_STRINGS.PERSISTENCE.ERR_INVALID_IP      = 'Invalid IPv4 address';
+_AS_STRINGS.PERSISTENCE.LABEL_IP_ADDRESS = 'IP address';
+_AS_STRINGS.PERSISTENCE.SECTION_ASUSTOR = 'Asustor settings';
+_AS_STRINGS.PERSISTENCE.SECTION_CUSTOM  = 'Custom settings';
+_AS_STRINGS.PERSISTENCE.ERR_NO_QUOTES = 'Quotes are not allowed';
+_AS_STRINGS.PERSISTENCE.SECTION_ASUSTOR_RO = 'Asustor settings (readonly)';
+_AS_STRINGS.PERSISTENCE.SECTION_RESULT     = 'Result';

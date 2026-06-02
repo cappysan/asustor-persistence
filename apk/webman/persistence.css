@@ -1,0 +1,17 @@
+.app-cappysan-persistence .x-fieldset-header-text {
+    font-weight: bold !important;
+}
+
+.persistence-nav-item {
+    height: 40px;
+    line-height: 40px;
+    padding-left: 15px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.persistence-readonly .x-form-field {
+    background-color: #f5f5f5 !important;
+    color: #666 !important;
+    cursor: default !important;
+}

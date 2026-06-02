@@ -11,9 +11,26 @@
     "maintainer": "Cappysan",
     "name": "Persistence",
     "package": "cappysan-persistence",
-    "version": "2026.6.0-r34",
+    "version": "2026.5.0-r94",
     "developer": "Cappysan",
     "website": "https://gitlab.com/cappysan/asustor/persistence"
+  },
+  "adm-desktop": {
+    "app": {
+      "type": "internal",
+      "js": [
+        "persistence.js"
+      ],
+      "css": [
+        "persistence.css"
+      ],
+      "module": "AS.ARC.apps.persistence.main",
+      "langTag": "PERSISTENCE"
+    },
+    "privilege": {
+      "accessible": "administrators",
+      "customizable": false
+    }
   },
   "register": {
     "share-folder": [
