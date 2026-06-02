@@ -8,7 +8,7 @@
 dynamic = ["dependencies"]
 
 name = "cappysan-persistence"
-version = "2026.6.0-r94"
+version = "2026.6.0-r34"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -22,7 +22,7 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 
 
 [tool.bumpversion]
-current_version = "2026.6.0-r94"
+current_version = "2026.6.0-r34"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.
