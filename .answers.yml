@@ -1,5 +1,5 @@
 ---
-# dummy value: 2026.6.0-r34
+# dummy value: 2026.6.0
 answers:
   - include: "~/.config/scaffold/answers.yml"
     optional: True
@@ -24,7 +24,7 @@ answers:
   - has_precommit_nitpick: True
 
   - license: "MIT"
-  - version: "2026.6.0-r34"
+  - version: "2026.6.0"
   - version_style: "calver-rev"
   - copyright_string: "Cappysan, Julien Lecomte, and contributors"
 
