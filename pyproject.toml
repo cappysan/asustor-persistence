@@ -8,7 +8,7 @@
 dynamic = ["dependencies"]
 
 name = "cappysan-persistence"
-version = "2026.6.0"
+version = "2026.6.1"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -22,7 +22,7 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 
 
 [tool.bumpversion]
-current_version = "2026.6.0"
+current_version = "2026.6.1"
 
 parse = """(?x)
   (?P<major>0|[1-9]\\d*)\\.
@@ -63,6 +63,9 @@ filename = ".answers.yml"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
+
+[[tool.bumpversion.files]]
+filename = "apk/CONTROL/config.json"
 
 
 [tool.codespell]
