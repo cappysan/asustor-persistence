@@ -1,6 +1,6 @@
 ---
 # The following file enables recreating a templated output dir by executing:
-#   mk-scaffold clone "https://gitlab.com/cappysan/scaffolds/asustor-template" --input-file .answers.yml --output-dir output
+#   mk-scaffold clone "https://gitlab.com/cappysan/scaffolds/asustor-template.git" --input-file .answers.yml --output-dir output
 answers:
   - include: "~/.config/scaffold/answers.yml"
     optional: True
@@ -35,7 +35,7 @@ answers:
   - template_version: "1.1.0-r4"
 
   - creation_year: "2026"
-  - last_update: "2026-06-03 17:31:08"
+  - last_update: "2026-06-03 17:56:22"
 
   - maintainer: "Cappysan"
   - developer: "Cappysan"

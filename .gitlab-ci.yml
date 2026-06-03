@@ -13,6 +13,7 @@ include:
   - ".gitlab/ci/workflow.yml"
   - ".gitlab/ci/stages.yml"
   - ".gitlab/ci/core.yml"
+
   - ".gitlab/ci/python.yml"
   - ".gitlab/ci/pre-commit.yml"
   - ".gitlab/ci/releases.yml"
@@ -23,8 +24,9 @@ pre-commit:
 pre-commit:autoupdate:
   extends: .pre-commit:autoupdate
 
+
 gitlab:release:
-  extends: .gitlab:release
+  extends: gitlab:release
   release:
     name: "$CI_COMMIT_TAG"
     description: "$CI_COMMIT_TAG"
