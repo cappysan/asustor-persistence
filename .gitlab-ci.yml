@@ -26,7 +26,7 @@ pre-commit:autoupdate:
 
 
 gitlab:release:
-  extends: gitlab:release
+  extends: .gitlab:release
   release:
     name: "$CI_COMMIT_TAG"
     description: "$CI_COMMIT_TAG"
