@@ -25,14 +25,10 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 current_version = "2026.6.2"
 
 parse = """(?x)
-  (?P<major>0|[1-9]\\d*)\\.
-  (?P<minor>0|[1-9]\\d*)\\.
-  (?P<patch>0|[1-9]\\d*)
-  (?:
-    -                              # dash separator for pre-release section
-    (?P<seg_l>alpha|beta|rc|post)  # pre-release label
-    (?:(?P<seg_n>0|[1-9]\\d*))     # pre-release version number
-  )?                               # pre-release section is optional
+  (?P<major>0|[1-9]\\d*)\\.  # year
+  (?P<minor>0|[1-9]\\d*)\\.  # month
+  (?P<patch>0|[1-9]\\d*)     # day
+  -r(?P<seg_n>0|[1-9]\\d*)
 """
 
 search = "{current_version}"
@@ -53,10 +49,17 @@ setup_hooks = []
 pre_commit_hooks = [
 
   "precommit autoupdate",
-  "make pc check pylint",
+
+  "make pc",
 ]
 post_commit_hooks = []
 
+serialize = [
+  "{major}.{minor}.{patch}-r{rev}",
+]
+
+[tool.bumpversion.parts.rev]
+first_value = "1"
 
 [[tool.bumpversion.files]]
 filename = ".answers.yml"
@@ -80,10 +83,9 @@ ignore-multiline-regex = "# codespell: off\n.*# codespell: on\n"
 check-filenames = ""
 
 
-
 [tool.nitpick]
 style = [
-  # Ensure this project is up-to-date with template.
+  # Ensure this project is up-to-date with template used to generate this template.
   "https://gitlab.com/cappysan/scaffolds/asustor-template/-/raw/main/nitpick/upstream-version-check.toml",
   #
   "https://gitlab.com/cappysan/nitpick/-/raw/main/resources/nitpick.toml",
