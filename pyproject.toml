@@ -25,11 +25,11 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 current_version = "2026.6.2"
 
 parse = """(?x)
-  (?P<major>0|[1-9]\\d*)\\.  # year
-  (?P<minor>0|[1-9]\\d*)\\.  # month
-  (?P<patch>0|[1-9]\\d*)     # day
-  -r(?P<seg_n>0|[1-9]\\d*)
+  (?P<major>2[0-9]{3})\\.    # year
+  (?P<minor>1[0-2]|[1-9])\\. # month
+  (?P<patch>0|[1-9]\\d*)     # patch
 """
+serialize = [ "{major}.{minor}.{patch}" ]
 
 search = "{current_version}"
 replace = "{new_version}"
@@ -54,12 +54,6 @@ pre_commit_hooks = [
 ]
 post_commit_hooks = []
 
-serialize = [
-  "{major}.{minor}.{patch}-r{rev}",
-]
-
-[tool.bumpversion.parts.rev]
-first_value = "1"
 
 [[tool.bumpversion.files]]
 filename = ".answers.yml"
@@ -86,7 +80,7 @@ check-filenames = ""
 [tool.nitpick]
 style = [
   # Ensure this project is up-to-date with template used to generate this template.
-  "https://gitlab.com/cappysan/scaffolds/asustor-template.git/-/raw/main/nitpick/upstream-version-check.toml",
+  "https://gitlab.com/cappysan/scaffolds/asustor-template/-/raw/main/nitpick/upstream-version-check.toml",
   #
   "https://gitlab.com/cappysan/nitpick/-/raw/main/resources/nitpick.toml",
   "https://gitlab.com/cappysan/nitpick/-/raw/main/resources/pre-commit.toml",

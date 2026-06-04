@@ -26,16 +26,16 @@ answers:
 
   - license: "MIT"
   - version: "2026.6.2"
-  - version_style: "calver-rev"
+  - version_style: "calver"
   - copyright_string: "Cappysan, Julien Lecomte, and contributors"
 
   - keep_placeholders: False
 
-  - template_url: "https://gitlab.com/cappysan/scaffolds/asustor-template.git"
+  - template_url: "https://gitlab.com/cappysan/scaffolds/asustor-template"
   - template_version: "1.1.0-r4"
 
   - creation_year: "2026"
-  - last_update: "2026-06-03 17:56:22"
+  - last_update: "2026-06-05 06:59:01"
 
   - maintainer: "Cappysan"
   - developer: "Cappysan"
@@ -44,3 +44,6 @@ answers:
   - cfg_name: "persistence"
   - cappysan_name: "cappysan-persistence"
   - asustor_name: "asustor-persistence"
+
+  - apk_description: "Enable changing /etc configuration files on boot"
+  - has_adm_desktop: True
