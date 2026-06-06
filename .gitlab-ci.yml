@@ -45,6 +45,12 @@ gitlab:release:
           url: "https://asustor.cappysan.dev/downloads/${CI_PROJECT_NAME}/cappysan-${CI_PROJECT_NAME}_${CI_COMMIT_TAG}_any.apk.sig"
           link_type: 'other'
 
+  needs:
+
+    # Require pre-commit to force nitpick check
+    - job: pre-commit
+      artifacts: false
+
   rules:
     - !reference [".gitlab:release", rules]
     - when: manual

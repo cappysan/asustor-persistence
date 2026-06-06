@@ -3,8 +3,7 @@
     "architecture": "any",
     "conflicts": [],
     "depends": [
-      "python3(>=3.10.11)",
-      "jq"
+      "python3(>=3.10.0)"
     ],
     "email": "julien@cappysan.dev",
     "firmware": "5.0.0",
@@ -42,7 +41,7 @@
     "boot-priority": {
       "x-comment": "docker-ce start order is 65",
       "start-order": 50,
-      "stop-order": 50
+      "stop-order": 80
     }
   }
 }

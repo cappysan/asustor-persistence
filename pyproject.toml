@@ -20,7 +20,9 @@ license = "MIT"
 [project.urls]
 Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 
-
+# ------------------------------------------------------------------------------
+# Other tools
+# ------------------------------------------------------------------------------
 [tool.bumpversion]
 current_version = "2026.6.2"
 
