@@ -33,9 +33,33 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 afterrender: function (win) {
                     win.header.items.items[1].hide();
                     fn.navGrid.getSelectionModel().select(0);
+                },
+                resize: function (win) {
+                    fn.resizeResultTextarea();
                 }
             }
         });
+    },
+
+    resizeResultTextarea: function () {
+        var fn       = this,
+            win      = fn.win,
+            textarea = win.down('textarea[readOnly=true]');
+
+        if (!textarea) { return; }
+
+        var winHeight    = win.getHeight(),
+            taEl         = textarea.el,
+            taTop        = taEl ? taEl.getTop() : 0,
+            winTop       = win.el.getTop(),
+            headerHeight = win.header ? win.header.getHeight() : 0,
+            footerHeight = 40,
+            padding      = 16,
+            newHeight    = winHeight - (taTop - winTop) - footerHeight - padding;
+
+        if (newHeight > 60) {
+            textarea.setHeight(newHeight);
+        }
     },
 
     getNavGrid: function () {
@@ -98,6 +122,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 if (tabId === 'dns')    { fn.renderDnsTab(cardPanel, json); }
                 if (tabId === 'docker') { fn.renderDockerTab(cardPanel, json); }
                 if (tabId === 'hosts')  { fn.renderHostsTab(cardPanel, json); }
+                Ext.defer(function () { fn.resizeResultTextarea(); }, 150);
             },
             failure: function (json) {
                 fn.win.el.unmask();
@@ -147,6 +172,18 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     cls:        'persistence-readonly',
                     anchor:     '100%',
                     value:      json.secondary_dns || ''
+                }, {
+                    xtype:   'box',
+                    autoEl:  { tag: 'div' },
+                    html:    '<a href="#" class="persistence-settings-link">' + _S('PERSISTENCE', 'LINK_NETWORK_SETTINGS') + '</a>',
+                    listeners: {
+                        render: function (box) {
+                            box.el.on('click', function (e) {
+                                e.preventDefault();
+                                AS.ARC.core.openApp('app-settings', 'network');
+                            }, null, { delegate: 'a' });
+                        }
+                    }
                 }]
             }, {
                 xtype:    'fieldset',

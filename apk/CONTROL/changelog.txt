@@ -4,6 +4,14 @@ Changes relevant to the users of Cappysan's Asustor Persistence APK are document
 
 This project adheres to [CalVer Versioning](https://calver.org/).
 
+## 2026.6.5 - 2026-06-11
+
+### Changed
+
+- Textbox now extends the length of the window
+- Link to Network Settings
+
+
 ## 2026.6.2 - 2026-06-02
 
 ### Added
