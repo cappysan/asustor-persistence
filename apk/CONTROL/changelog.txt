@@ -4,7 +4,7 @@ Changes relevant to the users of Cappysan's Asustor Persistence APK are document
 
 This project adheres to [CalVer Versioning](https://calver.org/).
 
-## 2026.6.8 - 2026-06-16
+## 2026.6.8-r9 - 2026-06-16
 
 ### Changed
 
