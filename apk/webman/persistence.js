@@ -175,6 +175,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 }, {
                     xtype:   'box',
                     autoEl:  { tag: 'div' },
+                    style:   'margin-top: 8px;',
                     html:    '<a href="#" class="persistence-settings-link">' + _S('PERSISTENCE', 'LINK_NETWORK_SETTINGS') + '</a>',
                     listeners: {
                         render: function (box) {
@@ -209,7 +210,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
-                    fieldStyle: 'font-family: monospace; font-size: 13px;',
+                    cls:        'persistence-conf-view',
                     value:      json.system_content || ''
                 }]
             }],
@@ -351,7 +352,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
-                    fieldStyle: 'font-family: monospace; font-size: 13px;',
+                    cls:        'persistence-conf-view',
                     value:      json.system_content || ''
                 }]
             }],
@@ -522,7 +523,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
-                    fieldStyle: 'font-family: monospace; font-size: 13px;',
+                    cls:        'persistence-conf-view',
                     value:      json.system_content || ''
                 }]
             }],
