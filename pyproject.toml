@@ -8,7 +8,7 @@
 dynamic = ["dependencies"]
 
 name = "cappysan-persistence"
-version = "2026.6.5"
+version = "2026.6.5-r7"
 authors = [
   {name = "Julien Lecomte", email = "julien@cappysan.dev"}
 ]
@@ -24,14 +24,15 @@ Homepage = "https://gitlab.com/cappysan/asustor/persistence"
 # Other tools
 # ------------------------------------------------------------------------------
 [tool.bumpversion]
-current_version = "2026.6.5"
+current_version = "2026.6.5-r7"
 
 parse = """(?x)
-  (?P<major>2[0-9]{3})\\.    # year
-  (?P<minor>1[0-2]|[1-9])\\. # month
-  (?P<patch>0|[1-9]\\d*)     # patch
+  (?P<major>0|[1-9]\\d*)\\.
+  (?P<minor>0|[1-9]\\d*)\\.
+  (?P<patch>0|[1-9]\\d*)
+  -r(?P<rev>0|[1-9]\\d*)
 """
-serialize = [ "{major}.{minor}.{patch}" ]
+serialize = [ "{major}.{minor}.{patch}-r{rev}" ]
 
 search = "{current_version}"
 replace = "{new_version}"
@@ -55,6 +56,9 @@ pre_commit_hooks = [
   "make pc",
 ]
 post_commit_hooks = []
+
+[tool.bumpversion.parts.rev]
+first_value = "1"
 
 
 [[tool.bumpversion.files]]

@@ -11,7 +11,7 @@ This project adheres to [CalVer Versioning](https://calver.org/).
 - Textbox now use monospace font
 
 
-## 2026.6.5 - 2026-06-11
+## 2026.6.5-r7 - 2026-06-11
 
 ### Changed
 

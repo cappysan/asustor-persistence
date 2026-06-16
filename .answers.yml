@@ -27,8 +27,8 @@ answers:
   - has_precommit_nitpick: True
 
   - license: "MIT"
-  - version: "2026.6.5"
-  - version_style: "calver"
+  - version: "2026.6.5-r7"
+  - version_style: "calver-rev"
   - copyright_string: "Cappysan, Julien Lecomte, and contributors"
 
   - keep_placeholders: False
@@ -37,7 +37,7 @@ answers:
   - template_version: "1.1.0-r4"
 
   - creation_year: "2026"
-  - last_update: "2026-06-06 23:17:19"
+  - last_update: "2026-06-16 05:26:44"
 
   - maintainer: "Cappysan"
   - developer: "Cappysan"
