@@ -4,6 +4,13 @@ Changes relevant to the users of Cappysan's Asustor Persistence APK are document
 
 This project adheres to [CalVer Versioning](https://calver.org/).
 
+## 2026.6.8 - 2026-06-16
+
+### Changed
+
+- Textbox now use monospace font
+
+
 ## 2026.6.5 - 2026-06-11
 
 ### Changed
