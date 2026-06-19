@@ -177,7 +177,7 @@ PYEOF
                 ;;
 
             hosts)
-                FILE="${CFG_DIR}/deps.d/persistence/hosts"
+                FILE="${CFG_DIR}/etc/hosts"
                 if [ -f "$FILE" ]; then ACTIVE=1; TARGET="$FILE"
                 else ACTIVE=0; TARGET=""; fi
 
@@ -232,7 +232,7 @@ PYEOF
                 exit 0
                 ;;
             docker) TARGET="${CFG_DIR}/etc/docker/daemon.json" ;;
-            hosts)  TARGET="${CFG_DIR}/deps.d/persistence/hosts" ;;
+            hosts)  TARGET="${CFG_DIR}/etc/hosts" ;;
         esac
 
         ERR=$("$PYTHON" - << PYEOF 2>&1
