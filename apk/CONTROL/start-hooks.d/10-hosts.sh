@@ -14,4 +14,5 @@ fi
 
 # Concat all files together
 cat /etc/hosts.orig > /etc/hosts
+echo "" >> /etc/hosts
 cat /share/Configuration/persistence/etc/hosts >> /etc/hosts
