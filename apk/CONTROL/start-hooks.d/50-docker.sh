@@ -20,7 +20,7 @@ if test ! -f /usr/local/AppCentral/docker-ce/CONTROL/start-stop.sh; then
 fi
 
 if test ! -f ${APKG_CFG_DIR}/etc/docker/daemon.json; then
-  logger "[${WHAT}] Not reloading docker-ce, replacement docker.json does not exist."
+  logger "[${WHAT}] Not reloading docker-ce, replacement daemon.json does not exist."
   exit 0
 fi
 

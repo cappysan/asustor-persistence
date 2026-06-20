@@ -1,9 +1,6 @@
 #!/bin/sh
 # Persistence CGI - POSIX shell, no bashisms
 
-LOG=/tmp/persistence.log
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] === invoked === method=$REQUEST_METHOD qs=$QUERY_STRING len=$CONTENT_LENGTH" >> "$LOG"
-
 BODY=""
 if [ "$REQUEST_METHOD" = "POST" ] && [ -n "$CONTENT_LENGTH" ] && [ "$CONTENT_LENGTH" -gt 0 ]; then
     BODY=$(dd bs=1 count="$CONTENT_LENGTH" 2>/dev/null)
@@ -38,8 +35,6 @@ case "$TAB" in
     dns|docker|hosts) ;;
     *) TAB="dns" ;;
 esac
-
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] act=$ACT tab=$TAB" >> "$LOG"
 
 respond() {
     printf 'Content-Type: application/json\r\n\r\n'

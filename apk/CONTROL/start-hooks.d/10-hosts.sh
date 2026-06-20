@@ -7,12 +7,12 @@ cd ${APKG_PKG_DIR:-/nonexistent} || exit 1
 
 
 logger "[${WHAT}] Configuring /etc/hosts..."
+
 # Make a backup that will serve as header
 if test ! -f /etc/hosts.orig; then
   cp -f /etc/hosts /etc/hosts.orig
 fi
 
-# Concat all files together
 cat /etc/hosts.orig > /etc/hosts
 echo "" >> /etc/hosts
-cat /share/Configuration/persistence/etc/hosts >> /etc/hosts
+cat ${APKG_CFG_DIR}/etc/hosts >> /etc/hosts
