@@ -4,52 +4,8 @@ Changes relevant to the users of Cappysan's Asustor Persistence APK are document
 
 This project adheres to [CalVer Versioning](https://calver.org/).
 
-## 2026.6.8-r9 - 2026-06-16
-
-### Changed
-
-- Textbox now use monospace font
-
-
-## 2026.6.5-r7 - 2026-06-11
-
-### Changed
-
-- Textbox now extends the length of the window
-- Link to Network Settings
-
-
-## 2026.6.2 - 2026-06-02
+## 2026.6.8-r16 - 2026-06-21
 
 ### Added
 
-- Added an UI
-
-
-## 2026.3.0-r34 - 2026-03-25
-
-### Changed
-
-- Internal CI change
-
-
-## 2026.3.0-r33 - 2026-03-25
-
-### Changed
-
-- Correctly detect upgrade with undocumented value
-
-
-## 2026.3.0-r29 - 2026-03-25
-
-### Changed
-
-- Do not restart docker if configuration is invalid.
-- Improve start/stop actions
-
-
-## 2026.3.0-r28 - 2026-03-25
-
-### Added
-
-- Initial release
+- Enter beta phase of this package

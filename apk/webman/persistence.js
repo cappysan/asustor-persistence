@@ -242,7 +242,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
             url:    AS.ARC.util.getApiUrlWithSid(fn.apiUrl, { act: 'set', tab: 'dns' }),
             method: 'post',
             params: {
-                search:       search       ? search.getValue()       : '',
+                search:       search       ? search.getValue().replace(/[,;]/g, ' ').replace(/ {2,}/g, ' ').trim()       : '',
                 primary_dns:  primaryDns   ? primaryDns.getValue()   : '',
                 secondary_dns: secondaryDns ? secondaryDns.getValue() : ''
             },
@@ -267,13 +267,17 @@ Ext.define('AS.ARC.apps.persistence.core', {
         var fn  = this,
             cfg = {};
 
-        // Parse existing daemon.json content
-        if (json.content) {
-            try { cfg = Ext.decode(json.content); } catch (e) { cfg = {}; }
+        // Parse existing daemon.json content; empty content becomes {}
+        var rawContent = json.content || '';
+        if (Ext.String.trim(rawContent) === '') {
+            cfg = {};
+        } else {
+            try { cfg = Ext.decode(rawContent); } catch (e) { cfg = {}; }
         }
 
-        var logOpts   = cfg['log-opts'] || {};
-        var lw        = 160;
+        var logOpts     = cfg['log-opts'] || {};
+        var lw          = 160;
+        var currentDriver = cfg['log-driver'] || 'Default';
 
         cardPanel.add(Ext.create('Ext.panel.Panel', {
             cls:    'as-page-panel app-cappysan-persistence',
@@ -289,19 +293,31 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     fieldLabel: AS.ARC.util.fontToBold('log-driver'),
                     labelWidth: lw,
                     itemId:     'dockerLogDriver',
-                    store:      ['local'],
+                    store:      ['Default', 'local'],
                     editable:   false,
-                    value:      cfg['log-driver'] || 'local',
-                    anchor:     '100%'
+                    value:      currentDriver,
+                    anchor:     '100%',
+                    listeners: {
+                        change: function (combo, newVal) {
+                            var fset      = combo.up('fieldset'),
+                                sizeRow   = fset.down('#dockerMaxSizeRow'),
+                                fileField = fset.down('#dockerMaxFile');
+                            var show = (newVal !== 'Default');
+                            if (sizeRow)   { sizeRow.setVisible(show); }
+                            if (fileField) { fileField.setVisible(show); }
+                        }
+                    }
                 }, {
                     xtype:      'container',
+                    itemId:     'dockerMaxSizeRow',
                     layout:     'hbox',
                     anchor:     '100%',
+                    hidden:     currentDriver === 'Default',
                     items: [{
-                        xtype:     'displayfield',
-                        value:     AS.ARC.util.fontToBold('log-opts.max-size'),
-                        width:     lw,
-                        style:     'padding-top:3px;'
+                        xtype:        'label',
+                        html:         AS.ARC.util.fontToBold('log-opts.max-size'),
+                        width:        lw,
+                        style:        'display:block; padding-top:3px; -webkit-user-select:none; -moz-user-select:none; user-select:none;'
                     }, {
                         xtype:         'numberfield',
                         itemId:        'dockerMaxSizeNum',
@@ -310,7 +326,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                         allowDecimals: false,
                         value:         (function() {
                             var v = logOpts['max-size'] || '';
-                            return parseInt(v, 10) || 0;
+                            return parseInt(v, 10) || 256;
                         }())
                     }, {
                         xtype:    'combo',
@@ -331,7 +347,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     minValue:   1,
                     maxValue:   30,
                     value:      parseInt(logOpts['max-file'], 10) || 7,
-                    anchor:     '100%'
+                    anchor:     '100%',
+                    hidden:     currentDriver === 'Default'
                 }, {
                     xtype:      'checkboxfield',
                     fieldLabel: AS.ARC.util.fontToBold('live-restore'),
@@ -380,26 +397,32 @@ Ext.define('AS.ARC.apps.persistence.core', {
             maxFile     = fn.win.down('#dockerMaxFile'),
             liveRestore = fn.win.down('#dockerLiveRestore');
 
-        // Validate fields
-        var sizeNum = maxSizeNum.getValue();
-        if (sizeNum === null || sizeNum === '' || isNaN(sizeNum) || sizeNum < 0) {
-            maxSizeNum.markInvalid('Must be a number >= 0');
-            return;
-        }
-        var fileNum = maxFile.getValue();
-        if (fileNum === null || fileNum < 1 || fileNum > 30) {
-            maxFile.markInvalid('Must be between 1 and 30');
-            return;
-        }
+        var driverVal = logDriver.getValue();
+        var isDefault = (driverVal === 'Default');
 
-        var cfg = {
-            'log-driver': logDriver.getValue(),
-            'log-opts': {
+        var cfg = {};
+
+        if (!isDefault) {
+            // Validate fields only when log-driver is not Default
+            var sizeNum = maxSizeNum.getValue();
+            if (sizeNum === null || sizeNum === '' || isNaN(sizeNum) || sizeNum < 0) {
+                maxSizeNum.markInvalid('Must be a number >= 0');
+                return;
+            }
+            var fileNum = maxFile.getValue();
+            if (fileNum === null || fileNum < 1 || fileNum > 30) {
+                maxFile.markInvalid('Must be between 1 and 30');
+                return;
+            }
+
+            cfg['log-driver'] = driverVal;
+            cfg['log-opts'] = {
                 'max-size': String(parseInt(sizeNum, 10)) + maxSizeUnit.getValue(),
                 'max-file': String(parseInt(fileNum, 10))
-            },
-            'live-restore': liveRestore.getValue() === true
-        };
+            };
+        }
+
+        cfg['live-restore'] = liveRestore.getValue() === true;
 
         // Pretty-print matching the sample format
         var content = JSON.stringify(cfg, null, 2);
@@ -577,7 +600,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     if (!ipFld || !hFld) { return; }
 
                     var ip   = Ext.String.trim(ipFld.getValue()),
-                        host = Ext.String.trim(hFld.getValue());
+                        host = Ext.String.trim(hFld.getValue().replace(/[,;]/g, ' ').replace(/ {2,}/g, ' '));
 
                     // IPv4: dotted decimal, IPv6: colon-hex (full, compressed, mapped)
                     var ipv4Re = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -594,6 +617,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     if (!host) {
                         hFld.markInvalid(_S('COMMON', 'REQUIRED'));
                         return;
+                    }
                     if (ip.indexOf("'") !== -1 || ip.indexOf('"') !== -1) {
                         ipFld.markInvalid(_S('PERSISTENCE', 'ERR_NO_QUOTES'));
                         return;
@@ -601,7 +625,6 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     if (host.indexOf("'") !== -1 || host.indexOf('"') !== -1) {
                         hFld.markInvalid(_S('PERSISTENCE', 'ERR_NO_QUOTES'));
                         return;
-                    }
                     }
 
                     if (isModify) {
