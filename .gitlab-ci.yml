@@ -76,7 +76,7 @@ production:clean:
   script:
     - md5sum --check < MD5SUMS
     - sha512sum --check < SHA512SUMS
-    - ls -1c *.apk* | tac | head -n -2 | tac | xargs rm -v 
+    - ls -1c *.apk* | tac | head -n -2 | tac | xargs rm -v
     - md5sum *apk *apk.sig > MD5SUMS
     - sha512sum *apk *apk.sig > SHA512SUMS
   rules:
