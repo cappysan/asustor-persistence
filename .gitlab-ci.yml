@@ -81,5 +81,5 @@ production:clean:
     - md5sum *apk *apk.sig > MD5SUMS
     - sha512sum *apk *apk.sig > SHA512SUMS
   rules:
-    # - !reference [".gitlab:release", rules]
+    - !reference [".gitlab:release", rules]
     - when: manual
