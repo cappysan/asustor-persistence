@@ -471,24 +471,29 @@ Ext.define('AS.ARC.apps.persistence.core', {
         }
 
         var store = Ext.create('Ext.data.Store', {
-            fields: ['ip', 'host'],
-            data:   rows
+            pageSize: 5,
+            fields:   ['ip', 'host'],
+            data:     rows
         });
 
         var grid = Ext.create('Ext.grid.Panel', {
-            itemId:   'hostsGrid',
-            store:    store,
-            border:   false,
-            anchor:   '100%',
-            height:   200,
+            itemId:          'hostsGrid',
+            store:           store,
+            border:          false,
+            sortableColumns: false,
+            style: {
+                border: '#BBB 1px solid'
+            },
             columns: [{
-                text:      _S('PERSISTENCE', 'COL_IP'),
-                dataIndex: 'ip',
-                flex:      1
+                header:       _S('PERSISTENCE', 'COL_IP'),
+                dataIndex:    'ip',
+                menuDisabled: true,
+                flex:         1
             }, {
-                text:      _S('PERSISTENCE', 'COL_HOST'),
-                dataIndex: 'host',
-                flex:      2
+                header:       _S('PERSISTENCE', 'COL_HOST'),
+                dataIndex:    'host',
+                menuDisabled: true,
+                flex:         2
             }],
             dockedItems: [{
                 xtype: 'toolbar',
@@ -514,6 +519,9 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     }
                 }]
             }],
+            bbar: Ext.create('AS.ARC.pagingToolbar', {
+                store: store
+            }),
             listeners: {
                 selectionchange: function (model, sel) {
                     var has = sel.length > 0;
