@@ -477,7 +477,6 @@ Ext.define('AS.ARC.apps.persistence.core', {
         }
 
         var store = Ext.create('Ext.data.Store', {
-            pageSize: 5,
             fields:   ['ip', 'host'],
             data:     rows
         });
@@ -487,6 +486,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
             store:           store,
             border:          false,
             sortableColumns: false,
+            height:          271,
+            scroll:          'vertical',
             style: {
                 border: '#BBB 1px solid'
             },
@@ -525,9 +526,6 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     }
                 }]
             }],
-            bbar: Ext.create('AS.ARC.pagingToolbar', {
-                store: store
-            }),
             listeners: {
                 selectionchange: function (model, sel) {
                     var has = sel.length > 0;
