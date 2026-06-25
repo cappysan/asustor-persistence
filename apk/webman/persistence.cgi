@@ -254,6 +254,11 @@ PYEOF
         respond '{"success":true}'
         ;;
 
+    restart-docker)
+        /usr/local/AppCentral/cappysan-persistence/CONTROL/start-stop.sh restart 2>&1
+        respond '{"success":true}'
+        ;;
+
     *)
         respond "{\"success\":false,\"error_code\":400,\"error_msg\":\"Unknown action: $ACT\"}"
         ;;

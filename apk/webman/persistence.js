@@ -21,10 +21,10 @@ Ext.define('AS.ARC.apps.persistence.core', {
             itemId:    fn.id,
             title:     '<div class="as-header" style="background-image:url(' + AS.ARC.util.fixDc('/apps/cappysan-persistence/images/icon-app-task.png') + ');background-position:50%;background-repeat:no-repeat;"></div><div class="as-header-text">Persistence</div>',
 
-            width:     700,
-            height:    500,
-            minWidth:  700,
-            minHeight: 500,
+            width:     720,
+            height:    650,
+            minWidth:  720,
+            minHeight: 650,
             resizable: true,
             border:    false,
             layout:    'fit',
@@ -90,7 +90,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     var iconUrl = icons[record.data.tabId] || icons.dns;
                     return '<div class="fn-block">' +
                            '<div class="fn-icon" style="background-image:url(' + iconUrl + ');background-repeat:no-repeat;background-position:center center;background-size:contain;"></div>' +
-                           '<div class="fn-title" style="width:130px;opacity:1;">' + record.data.title + '</div>' +
+                           '<div class="fn-title" style="width:150px;opacity:1;">' + record.data.title + '</div>' +
                            '<div class="x-clear"></div>' +
                            '</div>';
                 }
@@ -381,12 +381,23 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     { xtype: 'component', flex: 1 },
                     {
                         xtype:   'button',
-                        text:    _S('COMMON', 'APPLY'),
+                        text:    _S('PERSISTENCE', 'BTN_SAVE'),
                         handler: function () { fn.saveDockerTab(); }
                     }
                 ]
             }]
         }));
+    },
+
+    restartDocker: function () {
+        var fn = this;
+        fn.win.el.mask(_S('COMMON', 'APPLYING'));
+        AS.ARC.ajax({
+            url:    AS.ARC.util.getApiUrlWithSid(fn.apiUrl, { act: 'restart-docker' }),
+            method: 'post',
+            success: function () { fn.win.el.unmask(); },
+            failure: function () { fn.win.el.unmask(); }
+        });
     },
 
     saveDockerTab: function () {
@@ -440,12 +451,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
             params: { content: content },
             success: function () {
                 fn.win.el.unmask();
-                AS.ARC.ajax({
-                    url:    AS.ARC.util.getApiUrlWithSid(fn.apiUrl, { act: 'restart' }),
-                    method: 'post',
-                    success: function () { fn.switchTab('docker'); },
-                    failure: function () { fn.switchTab('docker'); }
-                });
+                fn.switchTab('docker');
             },
             failure: function (json) {
                 fn.win.el.unmask();
@@ -697,7 +703,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 itemId: 'westPanel',
                 cls:    'as-selector-panel',
                 border: false,
-                width:  150,
+                width:  190,
                 layout: 'fit',
                 items:  [fn.getNavGrid()]
             }, {
