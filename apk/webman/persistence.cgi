@@ -1,9 +1,13 @@
 #!/bin/sh
-# Persistence CGI - POSIX shell, no bashisms
+# Persistence CGI
 
 BODY=""
-if [ "$REQUEST_METHOD" = "POST" ] && [ -n "$CONTENT_LENGTH" ] && [ "$CONTENT_LENGTH" -gt 0 ]; then
-    BODY=$(dd bs=1 count="$CONTENT_LENGTH" 2>/dev/null)
+if [ "$REQUEST_METHOD" = "POST" ]; then
+    if [ -n "$CONTENT_LENGTH" ] && [ "$CONTENT_LENGTH" -gt 0 ]; then
+        BODY=$(dd bs="$CONTENT_LENGTH" count=1 2>/dev/null)
+    else
+        BODY=$(cat)
+    fi
 fi
 
 ALL_PARAMS="${QUERY_STRING}&${BODY}"
@@ -28,9 +32,9 @@ get_param() {
     urldecode "$raw"
 }
 
+# Read all params upfront
 ACT=$(get_param act)
 TAB=$(get_param tab)
-
 case "$TAB" in
     dns|docker|hosts) ;;
     *) TAB="dns" ;;
@@ -42,13 +46,12 @@ respond() {
 }
 
 find_python() {
-    for P in python3 python /usr/local/bin/python3 /usr/bin/python3 /usr/bin/python; do
+    for P in python3 /usr/local/bin/python3 /usr/bin/python3 python /usr/bin/python; do
         if command -v "$P" >/dev/null 2>&1; then echo "$P"; return; fi
     done
 }
 
 CFG_DIR="/share/Configuration/persistence"
-# Use APKG_CFG_DIR if set by ADM at runtime
 if [ -n "$APKG_CFG_DIR" ]; then CFG_DIR="$APKG_CFG_DIR"; fi
 NAS_CONF="/etc/nas.conf"
 
@@ -75,8 +78,6 @@ case "$ACT" in
 
                 RESULT=$("$PYTHON" - << PYEOF 2>&1
 import json, os, configparser
-
-# Read resolv.conf content
 target = '${TARGET}'
 content = ''
 if target and os.path.exists(target):
@@ -85,15 +86,12 @@ if target and os.path.exists(target):
             content = f.read()
     except Exception:
         pass
-
-# Parse /etc/nas.conf for [Network] fields
 def read_ini_value(path, section, key):
     try:
         with open(path) as f:
             raw = '[__root__]\n' + f.read()
         cp = configparser.RawConfigParser()
         cp.read_string(raw)
-        # configparser lowercases keys by default
         for s in cp.sections():
             if s.lower() == section.lower():
                 for k, v in cp.items(s):
@@ -102,13 +100,10 @@ def read_ini_value(path, section, key):
     except Exception:
         pass
     return ''
-
 nas = '${NAS_CONF}'
 domain_dns    = read_ini_value(nas, 'Network', 'DomainDNS')
 primary_dns   = read_ini_value(nas, 'Network', 'PrimaryDNS')
 secondary_dns = read_ini_value(nas, 'Network', 'SecondaryDNS')
-
-# Extract 'search' value from resolv.conf if present
 search_val = ''
 if target and os.path.exists(target):
     try:
@@ -120,23 +115,13 @@ if target and os.path.exists(target):
                     break
     except Exception:
         pass
-
 system_resolv = ''
 try:
     with open('/etc/resolv.conf') as f:
         system_resolv = f.read()
 except Exception:
     pass
-print(json.dumps({
-    'success':        True,
-    'active':         bool(${ACTIVE}),
-    'content':        content,
-    'domain_dns':     domain_dns,
-    'primary_dns':    primary_dns,
-    'secondary_dns':  secondary_dns,
-    'search_val':     search_val,
-    'system_content': system_resolv
-}))
+print(json.dumps({'success': True, 'active': bool(${ACTIVE}), 'content': content, 'domain_dns': domain_dns, 'primary_dns': primary_dns, 'secondary_dns': secondary_dns, 'search_val': search_val, 'system_content': system_resolv}))
 PYEOF
 )
                 printf 'Content-Type: application/json\r\n\r\n'
@@ -144,27 +129,18 @@ PYEOF
                 ;;
 
             docker)
-                FILE="${CFG_DIR}/etc/docker/daemon.json"
-                if [ -f "$FILE" ]; then ACTIVE=1; TARGET="$FILE"
-                else ACTIVE=0; TARGET=""; fi
-
+                PYTHON=$(find_python)
                 RESULT=$("$PYTHON" - << PYEOF 2>&1
 import json, os
-target = '${TARGET}'
+target = '${CFG_DIR}/etc/docker/daemon.json'
 content = ''
-if target and os.path.exists(target):
+if os.path.exists(target):
     try:
         with open(target) as f:
             content = f.read()
     except Exception:
         pass
-system_f = ''
-try:
-    with open('/etc/docker/daemon.json') as f:
-        system_f = f.read()
-except Exception:
-    pass
-print(json.dumps({'success': True, 'active': bool(${ACTIVE}), 'content': content, 'system_content': system_f}))
+print(json.dumps({'success': True, 'content': content}))
 PYEOF
 )
                 printf 'Content-Type: application/json\r\n\r\n'
@@ -202,7 +178,6 @@ PYEOF
         ;;
 
     set)
-        CONTENT=$(get_param content)
         PYTHON=$(find_python)
         if [ -z "$PYTHON" ]; then
             respond '{"success":false,"error_code":500,"error_msg":"No python interpreter found"}'
@@ -216,37 +191,37 @@ PYEOF
                 SECONDARY=$(get_param secondary_dns)
                 TARGET="${CFG_DIR}/etc/resolv.conf"
                 mkdir -p "$(dirname "$TARGET")"
-                # Build resolv.conf
                 {
-                    [ -n "$SEARCH" ] && printf 'search %s\n' "$SEARCH"
+                    [ -n "$SEARCH" ]    && printf 'search %s\n'    "$SEARCH"
                     [ -n "$PRIMARY" ]   && printf 'nameserver %s\n' "$PRIMARY"
                     [ -n "$SECONDARY" ] && printf 'nameserver %s\n' "$SECONDARY"
                     printf '\n'
                 } > "$TARGET"
                 respond '{"success":true}'
-                exit 0
                 ;;
-            docker) TARGET="${CFG_DIR}/etc/docker/daemon.json" ;;
-            hosts)  TARGET="${CFG_DIR}/etc/hosts" ;;
-        esac
 
-        ERR=$("$PYTHON" - << PYEOF 2>&1
-import os
-target  = '${TARGET}'
-content = '''${CONTENT}'''
-os.makedirs(os.path.dirname(target), exist_ok=True)
-with open(target, 'w') as f:
-    f.write(content)
-    if not content.endswith('\n'):
-        f.write('\n')
-PYEOF
-)
-        if [ -n "$ERR" ]; then
-            ESCAPED=$(echo "$ERR" | sed 's/"/\\"/g' | tr '\n' ' ')
-            respond "{\"success\":false,\"error_code\":500,\"error_msg\":\"$ESCAPED\"}"
-        else
-            respond '{"success":true}'
-        fi
+            docker)
+                CONTENT=$(get_param content)
+                TARGET="${CFG_DIR}/etc/docker/daemon.json"
+                mkdir -p "$(dirname "$TARGET")"
+                PYTHON=$(find_python)
+                printf '%s' "$CONTENT" | "$PYTHON" -c "
+import sys,json
+data=sys.stdin.read()
+obj=json.loads(data)
+print(json.dumps(obj,indent=2))
+" > "$TARGET"
+                respond '{"success":true}'
+                ;;
+
+            hosts)
+                CONTENT=$(get_param content)
+                TARGET="${CFG_DIR}/etc/hosts"
+                mkdir -p "$(dirname "$TARGET")"
+                printf '%s\n' "$CONTENT" > "$TARGET"
+                respond '{"success":true}'
+                ;;
+        esac
         ;;
 
     restart)

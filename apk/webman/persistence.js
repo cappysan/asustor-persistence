@@ -196,7 +196,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     labelWidth: labelWidth,
                     itemId:     'dnsSearch',
                     anchor:     '100%',
-                    value:      json.search_val || ''
+                    emptyText:  'example.com',
+                    value:      json.search_val || undefined
                 }]
             }, {
                 xtype:    'fieldset',
@@ -356,6 +357,26 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     itemId:     'dockerLiveRestore',
                     anchor:     '100%',
                     checked:    cfg['live-restore'] === true
+                }, {
+                    xtype:      'container',
+                    anchor:     '100%',
+                    layout:     'hbox',
+                    items: [{
+                        xtype:      'textfield',
+                        fieldLabel: AS.ARC.util.fontToBold('metrics-addr'),
+                        labelWidth: lw,
+                        itemId:     'dockerMetrics',
+                        flex:       1,
+                        value:      cfg['metrics-addr'] || ''
+                    }, {
+                        xtype:   'button',
+                        text:    'default',
+                        style:   'margin-left:4px;',
+                        handler: function () {
+                            var f = this.up('container').down('#dockerMetrics');
+                            if (f) { f.setValue('0.0.0.0:9323'); }
+                        }
+                    }]
                 }]
             }, {
                 xtype:    'fieldset',
@@ -363,14 +384,14 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 defaults: { anchor: '100%' },
                 items: [{
                     xtype: 'displayfield',
-                    value: 'Contents of /etc/docker/daemon.json:'
+                    value: 'Contents of /share/Configuration/persistence/etc/docker/daemon.json:'
                 }, {
                     xtype:      'textarea',
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
                     cls:        'persistence-conf-view',
-                    value:      json.system_content || ''
+                    value:      json.content || ''
                 }]
             }],
             dockedItems: [{
@@ -406,15 +427,14 @@ Ext.define('AS.ARC.apps.persistence.core', {
             maxSizeNum  = fn.win.down('#dockerMaxSizeNum'),
             maxSizeUnit = fn.win.down('#dockerMaxSizeUnit'),
             maxFile     = fn.win.down('#dockerMaxFile'),
-            liveRestore = fn.win.down('#dockerLiveRestore');
+            liveRestore = fn.win.down('#dockerLiveRestore'),
+            metrics     = fn.win.down('#dockerMetrics');
 
         var driverVal = logDriver.getValue();
         var isDefault = (driverVal === 'Default');
-
         var cfg = {};
 
         if (!isDefault) {
-            // Validate fields only when log-driver is not Default
             var sizeNum = maxSizeNum.getValue();
             if (sizeNum === null || sizeNum === '' || isNaN(sizeNum) || sizeNum < 0) {
                 maxSizeNum.markInvalid('Must be a number >= 0');
@@ -425,7 +445,6 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 maxFile.markInvalid('Must be between 1 and 30');
                 return;
             }
-
             cfg['log-driver'] = driverVal;
             cfg['log-opts'] = {
                 'max-size': String(parseInt(sizeNum, 10)) + maxSizeUnit.getValue(),
@@ -433,16 +452,13 @@ Ext.define('AS.ARC.apps.persistence.core', {
             };
         }
 
-        cfg['live-restore'] = liveRestore.getValue() === true;
+        if (liveRestore.getValue()) { cfg['live-restore'] = true; }
 
-        // Pretty-print matching the sample format
-        var content = JSON.stringify(cfg, null, 2);
+        var metricsVal = metrics ? Ext.String.trim(metrics.getValue()) : '';
+        if (metricsVal && metricsVal !== '0.0.0.0:9323') { cfg['metrics-addr'] = metricsVal; }
 
-        // Final sanity check
-        try { JSON.parse(content); } catch (e) {
-            AS.ARC.util.showMsgWindow({}, { error_code: 500, error_msg: 'Invalid JSON: ' + e.message }, fn.win);
-            return;
-        }
+        // Build daemon.json content in JS — single line to avoid CGI multiline issues
+        var content = JSON.stringify(cfg);
 
         fn.win.el.mask(_S('COMMON', 'APPLYING'));
         AS.ARC.ajax({
