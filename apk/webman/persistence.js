@@ -136,6 +136,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
         var fn         = this,
             labelWidth = 120;
 
+        fn._dnsJson = json;
+
         cardPanel.add(Ext.create('Ext.panel.Panel', {
             cls:    'as-page-panel app-cappysan-persistence',
             border: false,
@@ -197,7 +199,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     itemId:     'dnsSearch',
                     anchor:     '100%',
                     emptyText:  'example.com',
-                    value:      json.search_val || undefined
+                    value:      json.search_val || undefined,
+                    listeners:  { change: function () { fn.updateDnsPreview(); } }
                 }]
             }, {
                 xtype:    'fieldset',
@@ -208,6 +211,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     value: 'Contents of /etc/resolv.conf:'
                 }, {
                     xtype:      'textarea',
+                    itemId:     'dnsPreview',
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
@@ -229,6 +233,24 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 ]
             }]
         }));
+    },
+
+    updateDnsPreview: function () {
+        var fn       = this,
+            search   = fn.win.down('#dnsSearch'),
+            preview  = fn.win.down('#dnsPreview');
+
+        if (!search || !preview) { return; }
+
+        var json      = fn._dnsJson || {},
+            searchVal = Ext.String.trim(search.getValue()),
+            lines     = [];
+
+        if (searchVal)          { lines.push('search '     + searchVal); }
+        if (json.primary_dns)   { lines.push('nameserver ' + json.primary_dns); }
+        if (json.secondary_dns) { lines.push('nameserver ' + json.secondary_dns); }
+
+        preview.setValue(lines.join('\n'));
     },
 
     saveDnsTab: function () {
@@ -278,7 +300,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
 
         var logOpts     = cfg['log-opts'] || {};
         var lw          = 160;
-        var currentDriver = cfg['log-driver'] || 'Default';
+        var currentDriver = cfg['log-driver'] || 'default';
 
         cardPanel.add(Ext.create('Ext.panel.Panel', {
             cls:    'as-page-panel app-cappysan-persistence',
@@ -294,7 +316,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     fieldLabel: AS.ARC.util.fontToBold('log-driver'),
                     labelWidth: lw,
                     itemId:     'dockerLogDriver',
-                    store:      ['Default', 'local'],
+                    store:      ['default', 'local', 'json-file'],
                     editable:   false,
                     value:      currentDriver,
                     anchor:     '100%',
@@ -303,9 +325,10 @@ Ext.define('AS.ARC.apps.persistence.core', {
                             var fset      = combo.up('fieldset'),
                                 sizeRow   = fset.down('#dockerMaxSizeRow'),
                                 fileField = fset.down('#dockerMaxFile');
-                            var show = (newVal !== 'Default');
+                            var show = (newVal !== 'default');
                             if (sizeRow)   { sizeRow.setVisible(show); }
                             if (fileField) { fileField.setVisible(show); }
+                            fn.updateDockerPreview();
                         }
                     }
                 }, {
@@ -313,7 +336,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     itemId:     'dockerMaxSizeRow',
                     layout:     'hbox',
                     anchor:     '100%',
-                    hidden:     currentDriver === 'Default',
+                    hidden:     currentDriver === 'default',
                     items: [{
                         xtype:        'label',
                         html:         AS.ARC.util.fontToBold('log-opts.max-size'),
@@ -325,10 +348,12 @@ Ext.define('AS.ARC.apps.persistence.core', {
                         minValue:      0,
                         flex:          1,
                         allowDecimals: false,
+                        emptyText:     '256',
                         value:         (function() {
                             var v = logOpts['max-size'] || '';
-                            return parseInt(v, 10) || 256;
-                        }())
+                            return parseInt(v, 10) || undefined;
+                        }()),
+                        listeners: { change: function () { fn.updateDockerPreview(); } }
                     }, {
                         xtype:    'combo',
                         itemId:   'dockerMaxSizeUnit',
@@ -338,7 +363,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
                         value:    (function() {
                             var v = logOpts['max-size'] || '';
                             return v && v.slice(-1) === 'g' ? 'g' : 'm';
-                        }())
+                        }()),
+                        listeners: { change: function () { fn.updateDockerPreview(); } }
                     }]
                 }, {
                     xtype:      'numberfield',
@@ -347,27 +373,49 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     itemId:     'dockerMaxFile',
                     minValue:   1,
                     maxValue:   30,
-                    value:      parseInt(logOpts['max-file'], 10) || 7,
+                    emptyText:  '7',
+                    value:      parseInt(logOpts['max-file'], 10) || undefined,
                     anchor:     '100%',
-                    hidden:     currentDriver === 'Default'
+                    hidden:     currentDriver === 'default',
+                    listeners: { change: function () { fn.updateDockerPreview(); } }
                 }, {
                     xtype:      'checkboxfield',
                     fieldLabel: AS.ARC.util.fontToBold('live-restore'),
                     labelWidth: lw,
                     itemId:     'dockerLiveRestore',
                     anchor:     '100%',
-                    checked:    cfg['live-restore'] === true
+                    checked:    cfg['live-restore'] === true,
+                    listeners: { change: function () { fn.updateDockerPreview(); } }
                 }, {
                     xtype:      'container',
                     anchor:     '100%',
                     layout:     'hbox',
                     items: [{
-                        xtype:      'textfield',
+                        xtype:      'checkboxfield',
+                        itemId:     'dockerMetricsEnabled',
                         fieldLabel: AS.ARC.util.fontToBold('metrics-addr'),
                         labelWidth: lw,
+                        checked:    !!cfg['metrics-addr'],
+                        listeners: {
+                            change: function (cb, checked) {
+                                var f = cb.up('container').down('#dockerMetrics');
+                                if (f) { f.setDisabled(!checked); }
+                                fn.updateDockerPreview();
+                            }
+                        }
+                    }, {
+                        xtype:      'textfield',
                         itemId:     'dockerMetrics',
                         flex:       1,
-                        value:      cfg['metrics-addr'] || ''
+                        emptyText:  '0.0.0.0:9323',
+                        disabled:   !cfg['metrics-addr'],
+                        style:      'margin-left:4px;',
+                        listeners: {
+                            afterrender: function (f) {
+                                if (cfg['metrics-addr']) { f.setValue(cfg['metrics-addr']); }
+                            },
+                            change: function () { fn.updateDockerPreview(); }
+                        }
                     }, {
                         xtype:   'button',
                         text:    'default',
@@ -375,6 +423,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                         handler: function () {
                             var f = this.up('container').down('#dockerMetrics');
                             if (f) { f.setValue('0.0.0.0:9323'); }
+                            fn.updateDockerPreview();
                         }
                     }]
                 }]
@@ -384,9 +433,10 @@ Ext.define('AS.ARC.apps.persistence.core', {
                 defaults: { anchor: '100%' },
                 items: [{
                     xtype: 'displayfield',
-                    value: 'Contents of /share/Configuration/persistence/etc/docker/daemon.json:'
+                    value: 'Contents of /etc/docker/daemon.json:'
                 }, {
                     xtype:      'textarea',
+                    itemId:     'dockerPreview',
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
@@ -402,7 +452,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     { xtype: 'component', flex: 1 },
                     {
                         xtype:   'button',
-                        text:    _S('PERSISTENCE', 'BTN_SAVE'),
+                        text:    _S('COMMON', 'APPLY'),
                         handler: function () { fn.saveDockerTab(); }
                     }
                 ]
@@ -421,6 +471,45 @@ Ext.define('AS.ARC.apps.persistence.core', {
         });
     },
 
+    updateDockerPreview: function () {
+        var fn          = this,
+            logDriver   = fn.win.down('#dockerLogDriver'),
+            maxSizeNum  = fn.win.down('#dockerMaxSizeNum'),
+            maxSizeUnit = fn.win.down('#dockerMaxSizeUnit'),
+            maxFile     = fn.win.down('#dockerMaxFile'),
+            liveRestore = fn.win.down('#dockerLiveRestore'),
+            metricsEnabled = fn.win.down('#dockerMetricsEnabled'),
+            metrics     = fn.win.down('#dockerMetrics'),
+            preview     = fn.win.down('#dockerPreview');
+
+        if (!logDriver || !preview) { return; }
+
+        var driverVal = logDriver.getValue();
+        var isDefault = (driverVal === 'default');
+        var cfg = {};
+
+        if (!isDefault) {
+            var sizeNum = (maxSizeNum && maxSizeNum.getValue() !== null && maxSizeNum.getValue() !== '') ? maxSizeNum.getValue() : 256;
+            var fileNum = (maxFile    && maxFile.getValue()    !== null && maxFile.getValue()    !== '') ? maxFile.getValue()    : 7;
+            if (sizeNum >= 1 && fileNum >= 1 && fileNum <= 30) {
+                cfg['log-driver'] = driverVal;
+                cfg['log-opts'] = {
+                    'max-size': String(parseInt(sizeNum, 10)) + (maxSizeUnit ? maxSizeUnit.getValue() : 'm'),
+                    'max-file': String(parseInt(fileNum, 10))
+                };
+            }
+        }
+
+        if (liveRestore && liveRestore.getValue()) { cfg['live-restore'] = true; }
+
+        if (metricsEnabled && metricsEnabled.getValue()) {
+            var metricsVal = metrics ? Ext.String.trim(metrics.getValue()) : '';
+            cfg['metrics-addr'] = metricsVal || '0.0.0.0:9323';
+        }
+
+        preview.setValue(JSON.stringify(cfg, null, 2));
+    },
+
     saveDockerTab: function () {
         var fn          = this,
             logDriver   = fn.win.down('#dockerLogDriver'),
@@ -428,20 +517,21 @@ Ext.define('AS.ARC.apps.persistence.core', {
             maxSizeUnit = fn.win.down('#dockerMaxSizeUnit'),
             maxFile     = fn.win.down('#dockerMaxFile'),
             liveRestore = fn.win.down('#dockerLiveRestore'),
+            metricsEnabled = fn.win.down('#dockerMetricsEnabled'),
             metrics     = fn.win.down('#dockerMetrics');
 
         var driverVal = logDriver.getValue();
-        var isDefault = (driverVal === 'Default');
+        var isDefault = (driverVal === 'default');
         var cfg = {};
 
         if (!isDefault) {
-            var sizeNum = maxSizeNum.getValue();
-            if (sizeNum === null || sizeNum === '' || isNaN(sizeNum) || sizeNum < 0) {
-                maxSizeNum.markInvalid('Must be a number >= 0');
+            var sizeNum = (maxSizeNum.getValue() !== null && maxSizeNum.getValue() !== '') ? maxSizeNum.getValue() : 256;
+            var fileNum = (maxFile.getValue()    !== null && maxFile.getValue()    !== '') ? maxFile.getValue()    : 7;
+            if (sizeNum < 1) {
+                maxSizeNum.markInvalid('Must be a number >= 1');
                 return;
             }
-            var fileNum = maxFile.getValue();
-            if (fileNum === null || fileNum < 1 || fileNum > 30) {
+            if (fileNum < 1 || fileNum > 30) {
                 maxFile.markInvalid('Must be between 1 and 30');
                 return;
             }
@@ -454,8 +544,10 @@ Ext.define('AS.ARC.apps.persistence.core', {
 
         if (liveRestore.getValue()) { cfg['live-restore'] = true; }
 
-        var metricsVal = metrics ? Ext.String.trim(metrics.getValue()) : '';
-        if (metricsVal) { cfg['metrics-addr'] = metricsVal; }
+        if (metricsEnabled && metricsEnabled.getValue()) {
+            var metricsVal = metrics ? Ext.String.trim(metrics.getValue()) : '';
+            cfg['metrics-addr'] = metricsVal || '0.0.0.0:9323';
+        }
 
         // Build daemon.json content in JS — single line to avoid CGI multiline issues
         var content = JSON.stringify(cfg);
@@ -481,6 +573,8 @@ Ext.define('AS.ARC.apps.persistence.core', {
         var fn   = this,
             rows = [];
 
+        fn._hostsJson = json;
+
         if (json.content) {
             Ext.each(json.content.split('\n'), function (line) {
                 line = Ext.String.trim(line);
@@ -494,7 +588,11 @@ Ext.define('AS.ARC.apps.persistence.core', {
 
         var store = Ext.create('Ext.data.Store', {
             fields:   ['ip', 'host'],
-            data:     rows
+            data:     rows,
+            listeners: {
+                datachanged: function () { fn.updateHostsPreview(); },
+                update:      function () { fn.updateHostsPreview(); }
+            }
         });
 
         var grid = Ext.create('Ext.grid.Panel', {
@@ -571,6 +669,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
                     value: 'Contents of /etc/hosts:'
                 }, {
                     xtype:      'textarea',
+                    itemId:     'hostsPreview',
                     anchor:     '100%',
                     height:     140,
                     readOnly:   true,
@@ -670,6 +769,28 @@ Ext.define('AS.ARC.apps.persistence.core', {
         });
 
         fn.hostPopup.show();
+    },
+
+    updateHostsPreview: function () {
+        var fn      = this,
+            grid    = fn.win.down('#hostsGrid'),
+            preview = fn.win.down('#hostsPreview');
+
+        if (!grid || !preview) { return; }
+
+        var lines = [];
+        grid.getStore().each(function (rec) {
+            var ip   = Ext.String.trim(rec.get('ip')),
+                host = Ext.String.trim(rec.get('host'));
+            if (ip && host) { lines.push(ip + '\t' + host); }
+        });
+
+        var origContent = Ext.String.trim((fn._hostsJson || {}).hosts_orig || ''),
+            userContent = lines.join('\n'),
+            combined    = origContent && userContent ? origContent + '\n\n' + userContent
+                        : origContent || userContent;
+
+        preview.setValue(combined);
     },
 
     saveHostsTab: function () {
