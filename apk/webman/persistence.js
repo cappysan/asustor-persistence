@@ -455,7 +455,7 @@ Ext.define('AS.ARC.apps.persistence.core', {
         if (liveRestore.getValue()) { cfg['live-restore'] = true; }
 
         var metricsVal = metrics ? Ext.String.trim(metrics.getValue()) : '';
-        if (metricsVal && metricsVal !== '0.0.0.0:9323') { cfg['metrics-addr'] = metricsVal; }
+        if (metricsVal) { cfg['metrics-addr'] = metricsVal; }
 
         // Build daemon.json content in JS — single line to avoid CGI multiline issues
         var content = JSON.stringify(cfg);
